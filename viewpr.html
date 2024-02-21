@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Single Vendor Clothing Website</title>
+    <title>View Products</title>
     <style>
         body {
             margin: -1.2rem;
@@ -51,13 +51,13 @@
         }
 
         #product-list {
-            #product-list {
-                display: flex;
-                justify-content: center;
-                flex-direction: column;
-                align-items: center;
-            }
+            display: flex;
+            justify-content: center;
+            flex-direction: row;
+            align-items: center;
+            flex-wrap: wrap;
         }
+
 
         footer {
             background-color: #333;
@@ -66,6 +66,28 @@
             padding: 10px 0;
         }
 
+        .cell {
+            height: 23rem;
+            width: 20rem;
+            margin: 1rem 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgb(239, 247, 247);
+        }
+
+        .Cat img {
+            width: 15rem;
+            height: 10rem;
+            object-fit: cover;
+            border-radius: 8px;
+            padding-top: 1rem;
+        }
+
+        .Cat p {
+            margin-top: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -105,14 +127,19 @@
                 const productDiv = document.createElement('div');
                 productDiv.classList.add('product');
                 productDiv.innerHTML = `
-                    <h3>${product.name}</h3>
-                    <p>Price: ${product.price}</p> 
-              `;
+            <div class="cell">
+            <div class="Cat">
+                            <img src="${product.image}" alt="${product.name}" style="max-width: 200px; max-height: 200px;">
+                            <p>Name: ${product.name}</p>
+                            <p>Category: ${product.category}</p>
+                            <p>Price: ${product.price}</p>
+                        </div>
+                             </div>
+                `;
                 productList.appendChild(productDiv);
             });
         });
     </script>
-
 </body>
 
 </html>
