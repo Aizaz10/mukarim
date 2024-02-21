@@ -94,7 +94,8 @@
 
         #product-list {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex-wrap: wrap;
             align-items: center;
         }
 
@@ -103,22 +104,27 @@
             border-bottom: 2px solid black;
         }
 
-        .cell4 {
-            height: 20rem;
-            width: 230px;
+        .cell {
+            height: 23rem;
+            width: 20rem;
             margin: 1rem 4rem;
             display: flex;
+            flex-direction: column;
+            align-items: center;
             background-color: rgb(239, 247, 247);
         }
 
-        .Cat {
-            position: relative;
-            top: 40px;
-            left: 15px;
-            font-family: sans-serif;
-            background-size: cover;
-            height: 220px;
-            width: 200px;
+        .Cat img {
+            width: 15rem;
+            height: 10rem;
+            object-fit: cover;
+            border-radius: 8px;
+            padding-top: 1rem;
+        }
+
+        .Cat p {
+            margin-top: 10px;
+            font-weight: bold;
         }
 
         button.delete-btn {
@@ -126,8 +132,9 @@
             color: #fff;
             border: none;
             padding: 1rem 1.6rem;
-            margin-left: 5rem;
+            margin-top: 10px;
             cursor: pointer;
+            border-radius: 8px;
         }
 
         button.delete-btn:hover {
@@ -140,7 +147,6 @@
             text-align: center;
             padding: 10px 0;
         }
-
     </style>
 </head>
 
@@ -160,20 +166,22 @@
 
     <main>
         <section>
-            <form id="add-product-form">
+            <form id="add-product-form" enctype="multipart/form-data">
                 <label for="name">Name:</label><br>
                 <input type="text" id="name" name="name" placeholder="Product's Name" required><br>
                 <label for="category">Category:</label><br>
                 <input type="text" id="category" name="category" placeholder="Enter Category" required><br>
                 <label for="price">Price:</label><br>
                 <input type="number" id="price" name="price" placeholder="Enter Price" required><br>
+                <label for="image">Image:</label><br>
+                <input type="file" id="image" name="image" accept="image/*" required><br>
                 <button type="submit">Add Product</button>
             </form>
         </section>
 
         <section id="list">
             <h2>Product List</h2>
-            <ol id="product-list"></ol>
+            <div id="product-list"></div>
         </section>
     </main>
 
@@ -186,39 +194,39 @@
             const productList = document.getElementById('product-list');
 
             let products = [];
+
             function displayProducts() {
                 productList.innerHTML = '';
                 products.forEach(product => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                <div class="cell4">
-                    <div class="Cat">
-                        <p>NAME: ${product.name}</p>
-                        </br>
-                        <p>CATEGORY: ${product.category}</p>
-                        </br>
-                        <h3>PRICE: ${product.price}</h3>
+                    const div = document.createElement('div');
+                    div.className = 'cell';
+                    div.innerHTML = `
+                        <div class="Cat">
+                            <img src="${product.image}" alt="Product Image">
+                            <p>Name: ${product.name}</p>
+                            <p>Category: ${product.category}</p>
+                            <p>Price: ${product.price}</p>
                         </div>
-                    </div>
-                <button class="delete-btn" data-id="${product.id}">Delete</button>
-            </br>
-            `;
-                    productList.appendChild(li);
+                        <button class="delete-btn" data-id="${product.id}">Delete</button>
+                    `;
+                    productList.appendChild(div);
                 });
             }
 
-            function addProduct(name, category, price) {
+            function addProduct(name, category, price, image) {
                 const id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
-                products.push({ id, name, category, price });
+                products.push({ id, name, category, price, image });
                 localStorage.setItem('products', JSON.stringify(products));
                 displayProducts();
             }
+
             addProductForm.addEventListener('submit', function (event) {
                 event.preventDefault();
                 const name = addProductForm.querySelector('#name').value;
                 const category = addProductForm.querySelector('#category').value;
                 const price = addProductForm.querySelector('#price').value;
-                addProduct(name, category, price);
+                const image = URL.createObjectURL(addProductForm.querySelector('#image').files[0]);
+                addProduct(name, category, price, image);
                 addProductForm.reset();
             });
 
